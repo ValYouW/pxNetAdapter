@@ -1,8 +1,11 @@
-﻿using System;
+﻿using pxNetAdapter.Request;
+using pxNetAdapter.Response;
+using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Web.Script.Serialization;
 
 namespace pxNetAdapter
 {
@@ -13,11 +16,12 @@ namespace pxNetAdapter
         public event EventHandler OnConnect;
         public event EventHandler<int> OnReconnect;
         public event EventHandler OnDisconnect;
-        public event EventHandler<string> OnMessage;
+		public event EventHandler<IResponse> OnMessage;
 
         private TcpClient m_tcpClient;
         private string m_host;
         private int m_port;
+		private JavaScriptSerializer m_responseSerializer;
 
         #endregion
 
@@ -25,6 +29,8 @@ namespace pxNetAdapter
         {
             State = ConnectionStateEnum.Disconnected;
             Reconnects = reconnects;
+			m_responseSerializer = new JavaScriptSerializer();
+			m_responseSerializer.RegisterConverters(new JavaScriptConverter[] { new ReqResConverter() });
         }
 
         #region Properties
@@ -53,20 +59,23 @@ namespace pxNetAdapter
             m_host = host;
             m_port = port;
             Thread socketThread = new Thread(Start);
+			socketThread.IsBackground = true;
             socketThread.Start();
         }
 
-        public void Send(string request)
+        public void Send(IRequest request)
         {
             if (State != ConnectionStateEnum.Connected)
                 throw new Exception("Invalid State - Not Connected");
 
-            if (string.IsNullOrEmpty(request))
+            if (request == null)
             {
                 throw new ArgumentException("request must be a non empty string", "request");
             }
 
-            byte[] data = Encoding.ASCII.GetBytes(request + Delimiter);
+			string json = m_responseSerializer.Serialize(request);
+
+            byte[] data = Encoding.ASCII.GetBytes(json + Delimiter);
             NetworkStream ns = m_tcpClient.GetStream();
             if (!ns.CanWrite)
             {
@@ -103,7 +112,7 @@ namespace pxNetAdapter
                 OnDisconnect(this, args);
         }
 
-        protected virtual void RaiseOnMessage(string args)
+        protected virtual void RaiseOnMessage(IResponse args)
         {
             if (OnMessage != null)
                 OnMessage(this, args);
@@ -232,7 +241,14 @@ namespace pxNetAdapter
 
         private void HandleMessage(string msg)
         {
-            RaiseOnMessage(msg);
+			IResponse res = m_responseSerializer.Deserialize(msg, typeof(Response.Response)) as IResponse;
+			if (res == null)
+			{
+				System.Diagnostics.Debug.Print("Got invalid response");
+				return;
+			}
+
+            RaiseOnMessage(res);
         }
 
         #endregion

@@ -2,6 +2,8 @@
 using System.Drawing;
 using System.Windows.Forms;
 using pxNetAdapter;
+using pxNetAdapter.Response;
+using pxNetAdapter.Request;
 
 namespace pxConnectorConsole
 {
@@ -82,15 +84,24 @@ namespace pxConnectorConsole
             LogConsole(m_connector.SessionId);
         }
 
-        void m_connector_OnMessage(object sender, string msg)
+        void m_connector_OnMessage(object sender, IResponse response)
         {
-            LogConsole(msg);
-        }
+			switch (response.Qualifier)
+			{ 
+				case "LoginResponse":
+					LogConsole("LoginResponse, Token: " + ((LoginResponse)response).Data.Token);
+					break;
+				default:
+					LogConsole("Got unknown response: " + response.Qualifier);
+					break;
+			}
+		}
 
         private void btnSend_Click(object sender, EventArgs e)
         {
-            string req = "{\"qualifier\": \"user/login\", \"data\": {\"user\": \"udiyqa\",\"password\": \"udiudi\"}}";
-            try
+			IRequest req = new LoginRequest("udiyqa", "udiudi");
+			req.RequestId = "4";
+			try
             {
                 m_connector.Send(req);
             }

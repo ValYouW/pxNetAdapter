@@ -1,3 +1,5 @@
+using pxNetAdapter.Request;
+using pxNetAdapter.Response;
 using System;
 
 namespace pxNetAdapter
@@ -7,11 +9,11 @@ namespace pxNetAdapter
         event EventHandler OnConnect;
         event EventHandler<int> OnReconnect;
         event EventHandler OnDisconnect;
-        event EventHandler<string> OnMessage;
+		event EventHandler<IResponse> OnMessage;
 
         void Connect(string host, int port);
         void Disconnect();
-        void Send(string request);
+		void Send(IRequest request);
     }
 }
 
