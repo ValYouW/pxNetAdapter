@@ -1,29 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Script.Serialization;
 
 namespace pxNetAdapter.Response
 {
-	public abstract class Response : IResponse
+	public class Response : IResponse
 	{
+		private ResponseTypeEnum m_qualifier;
 		public Response(IDictionary<string, object> data)
 		{
 			if (data == null)
 				return;
 
-			Qualifier = Utils.GetValue<string>(data, "qualifier", "");
-			RequestId = Utils.GetValue<string>(data, "requestId", "");
+			if (!Enum.TryParse(Utils.GetValue(data, "qualifier", ""), true, out m_qualifier))
+				m_qualifier = ResponseTypeEnum.None;
+
+			RequestId = Utils.GetValue(data, "requestId", "");
+			Error = null;
 			if (data.ContainsKey("error"))
 				Error = new Error(data["error"] as IDictionary<string, object>);
 		}
 
-		public string Qualifier { get; private set; }
+		public ResponseTypeEnum Qualifier { get { return m_qualifier; } }
 		public string RequestId { get; private set; }
 		public IError Error { get; private set; }
+		public IResponseData Data { get; set; }
 	}
 
 	public class Error : IError
@@ -33,11 +33,11 @@ namespace pxNetAdapter.Response
 			if (data == null)
 				return;
 
-			Code = data.ContainsKey("code") ? data["code"] as string : "";
-			Message = data.ContainsKey("message") ? data["message"] as string : "";
+			Code = data.ContainsKey("code") ? data["code"].ToString() : "";
+			Message = data.ContainsKey("message") ? data["message"].ToString() : "";
 		}
 
-		public string Code { get; protected set; }
-		public string Message { get; protected set; }
+		public string Code { get; private set; }
+		public string Message { get; private set; }
 	}
 }

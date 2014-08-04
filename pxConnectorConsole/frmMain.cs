@@ -4,6 +4,8 @@ using System.Windows.Forms;
 using pxNetAdapter;
 using pxNetAdapter.Response;
 using pxNetAdapter.Request;
+using pxNetAdapter.Response.MarketData;
+using pxNetAdapter.Response.User;
 
 namespace pxConnectorConsole
 {
@@ -14,7 +16,10 @@ namespace pxConnectorConsole
         private delegate void DlgSetStatus(string msg, Color? c);
         private delegate void DlgLogConsole(string msg);
 
-        private Connector m_connector;
+        private IConnector m_connector;
+
+	    private string m_token;
+	    private string m_userGUID;
 
         #endregion
 
@@ -49,7 +54,48 @@ namespace pxConnectorConsole
                 lblStatus.BackColor = color.Value;
         }
 
-        #endregion
+	    private void OnLogin(IResponse loginResponse)
+	    {
+			if (loginResponse.Error != null && !string.IsNullOrEmpty(loginResponse.Error.Code))
+		    {
+				LogConsole("Error login: " + loginResponse.Error.Code + ", " + loginResponse.Error.Message);
+				return;
+		    }
+
+			LoginResponseData data = (LoginResponseData)loginResponse.Data;
+		    LogConsole("Token: " + data.Token);
+		    m_token = data.Token;
+		    m_userGUID = data.UserInfo.GUID;
+
+		    // Get Quotes
+		    IRequest req = MarketData.SubscribeForQuotes(m_token, m_userGUID);
+			Send(req, response =>
+				{
+					if (response.Error != null && !string.IsNullOrEmpty(response.Error.Code))
+					{
+						LogConsole("Error subscribing for quotes: " + response.Error.Code + ", " + response.Error.Message);
+					}
+					else
+					{
+						LogConsole("Subscribed for quotes");
+					}
+				});
+	    }
+
+	    private void Send(IRequest request, Action<IResponse> cb = null)
+	    {
+			try
+			{
+				LogConsole("Sending " + request.Qualifier);
+				m_connector.Send(request, cb);
+			}
+			catch (Exception ex)
+			{
+				LogConsole("Error Sending: " + ex.Message);
+			}
+	    }
+
+	    #endregion
 
         #region EventHandlers
 
@@ -88,8 +134,11 @@ namespace pxConnectorConsole
         {
 			switch (response.Qualifier)
 			{ 
-				case "LoginResponse":
-					LogConsole("LoginResponse, Token: " + ((LoginResponse)response).Data.Token);
+				case ResponseTypeEnum.LoginResponse:
+					LogConsole("LoginResponse, Token: " + ((LoginResponseData)response.Data).Token);
+					break;
+				case ResponseTypeEnum.QuoteUpdateResponse:
+					LogConsole("Got " + ((QuoteUpdateResponseData)response.Data).Quotes.Keys.Count + " quotes");
 					break;
 				default:
 					LogConsole("Got unknown response: " + response.Qualifier);
@@ -99,16 +148,8 @@ namespace pxConnectorConsole
 
         private void btnSend_Click(object sender, EventArgs e)
         {
-			IRequest req = new LoginRequest("udiyqa", "udiudi");
-			req.RequestId = "4";
-			try
-            {
-                m_connector.Send(req);
-            }
-            catch (Exception ex)
-            {
-                LogConsole("Error Sending: " + ex.Message);
-            }
+			IRequest req = User.Login("udiyqa", "udiudi");
+			Send(req, OnLogin);
         }
 
         private void listConsole_DoubleClick(object sender, EventArgs e)

@@ -1,4 +1,5 @@
-﻿using pxNetAdapter.Request;
+﻿using System.Collections.Generic;
+using pxNetAdapter.Request;
 using pxNetAdapter.Response;
 using System;
 using System.Net;
@@ -22,6 +23,8 @@ namespace pxNetAdapter
         private string m_host;
         private int m_port;
 		private JavaScriptSerializer m_responseSerializer;
+	    private IDictionary<string, Action<IResponse>> m_callbacks;
+	    private int m_requestId;
 
         #endregion
 
@@ -31,6 +34,8 @@ namespace pxNetAdapter
             Reconnects = reconnects;
 			m_responseSerializer = new JavaScriptSerializer();
 			m_responseSerializer.RegisterConverters(new JavaScriptConverter[] { new ReqResConverter() });
+			m_callbacks = new Dictionary<string, Action<IResponse>>();
+	        m_requestId = 0;
         }
 
         #region Properties
@@ -63,16 +68,22 @@ namespace pxNetAdapter
             socketThread.Start();
         }
 
-        public void Send(IRequest request)
+		public void Send(IRequest request, Action<IResponse> onResponse = null)
         {
-            if (State != ConnectionStateEnum.Connected)
+			if (request == null || string.IsNullOrEmpty(request.Qualifier))
+			{
+				throw new ArgumentException("request must be a non empty string", "request");
+			}
+
+			if (string.IsNullOrEmpty(request.Qualifier))
+			{
+				throw new ArgumentException("request must contains Qualifier", "request");
+			}
+			
+			if (State != ConnectionStateEnum.Connected)
                 throw new Exception("Invalid State - Not Connected");
 
-            if (request == null)
-            {
-                throw new ArgumentException("request must be a non empty string", "request");
-            }
-
+			request.RequestId = (++m_requestId).ToString();
 			string json = m_responseSerializer.Serialize(request);
 
             byte[] data = Encoding.ASCII.GetBytes(json + Delimiter);
@@ -82,8 +93,11 @@ namespace pxNetAdapter
                 Disconnected();
                 throw new Exception("Disconnected");
             }
+
+			if (onResponse != null)
+				m_callbacks[request.RequestId] = onResponse;
             
-            ns.Write(data, 0, data.Length);
+			ns.Write(data, 0, data.Length);
         }
 
         public void Disconnect()
@@ -249,6 +263,12 @@ namespace pxNetAdapter
 			}
 
             RaiseOnMessage(res);
+
+	        if (!string.IsNullOrEmpty(res.RequestId) && m_callbacks.ContainsKey(res.RequestId))
+	        {
+		        m_callbacks[res.RequestId].Invoke(res);
+		        m_callbacks.Remove(res.RequestId);
+	        }
         }
 
         #endregion

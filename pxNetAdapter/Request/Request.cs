@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Script.Serialization;
+﻿using System.Collections.Generic;
 
 namespace pxNetAdapter.Request
 {
-	public abstract class Request : IRequest
+	public class Request : IRequest
 	{
 		public string Qualifier { get; private set; }
 		public string RequestId { get; set; }
+		public IRequestData Data { get; set; }
 
 		public Request(string qualifier)
 		{
@@ -24,6 +19,11 @@ namespace pxNetAdapter.Request
 			IDictionary<string, object> result = new Dictionary<string, object>();
 			result["qualifier"] = Qualifier;
 			result["requestId"] = RequestId;
+			
+			IDictionary<string, object> data = new Dictionary<string, object>();
+			result["data"] = data;
+			Data.FillData(data);
+
 			return result;
 		}
 	}

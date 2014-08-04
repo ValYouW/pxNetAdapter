@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace pxNetAdapter.Response
+﻿namespace pxNetAdapter.Response
 {
     public interface IResponse
     {
-        string Qualifier { get; }
+		ResponseTypeEnum Qualifier { get; }
         string RequestId { get; }
+		IError Error { get; }
+		IResponseData Data { get; set; }
     }
 
     public interface IError
@@ -19,6 +15,6 @@ namespace pxNetAdapter.Response
     }
 
     public interface IResponseData
-    { 
+    {
     }
 }

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Script.Serialization;
+using pxNetAdapter.Response;
+using pxNetAdapter.Response.MarketData;
+using pxNetAdapter.Response.User;
 
 namespace pxNetAdapter
 {
@@ -11,7 +11,7 @@ namespace pxNetAdapter
 	{
 		public override IEnumerable<Type> SupportedTypes
 		{
-			get { return new Type[] { typeof(Response.Response), typeof(Request.Request) }; }
+			get { return new[] { typeof(Response.Response), typeof(Request.Request) }; }
 		}
 
 		public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
@@ -31,15 +31,18 @@ namespace pxNetAdapter
 			if (type != typeof(Response.Response))
 				return null;
 
-			string resposeType = Utils.GetValue<string>(dictionary, "qualifier", "");
-			if (string.IsNullOrEmpty(resposeType))
-				return null;
+			IResponse response = new Response.Response(dictionary);
+			IDictionary<string, object> data = null;
+			if (dictionary.ContainsKey("data"))
+				data = dictionary["data"] as IDictionary<string, object>;
 
-			Response.IResponse response = null;
-			switch (resposeType)
+			switch (response.Qualifier)
 			{
-				case "LoginResponse":
-					response = new Response.LoginResponse(dictionary);
+				case ResponseTypeEnum.LoginResponse:
+					response.Data = new LoginResponseData(data);
+					break;
+				case ResponseTypeEnum.QuoteUpdateResponse:
+					response.Data = new QuoteUpdateResponseData(data);
 					break;
 			}
 

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace pxNetAdapter.Request
 {
@@ -10,5 +6,11 @@ namespace pxNetAdapter.Request
 	{
 		string Qualifier { get; }
 		string RequestId { get; set; }
+		IRequestData Data { get; set; }
+	}
+
+	public interface IRequestData
+	{
+		void FillData(IDictionary<string, object> data);
 	}
 }
