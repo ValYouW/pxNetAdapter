@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Web.Script.Serialization;
 using pxNetAdapter.Response;
 using pxNetAdapter.Response.MarketData;
+using pxNetAdapter.Response.TradingApp;
 using pxNetAdapter.Response.User;
 
 namespace pxNetAdapter
@@ -43,6 +44,9 @@ namespace pxNetAdapter
 					break;
 				case ResponseTypeEnum.QuoteUpdateResponse:
 					response.Data = new QuoteUpdateResponseData(data);
+					break;
+				case ResponseTypeEnum.InitialAppDataResponse:
+					response.Data = new InitialAppDataResponseData(data);
 					break;
 			}
 

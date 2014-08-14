@@ -46,11 +46,16 @@
     <Compile Include="ReqResConverter.cs" />
     <Compile Include="Request\Interfaces.cs" />
     <Compile Include="Request\MarketData.cs" />
+    <Compile Include="Request\TradingApp.cs" />
     <Compile Include="Request\User.cs" />
     <Compile Include="Request\Request.cs" />
+    <Compile Include="Response\Assets\Asset.cs" />
     <Compile Include="Response\Enums.cs" />
     <Compile Include="Response\Interfaces.cs" />
+    <Compile Include="Response\MarketData\Quote.cs" />
     <Compile Include="Response\MarketData\QuoteUpdateResponse.cs" />
+    <Compile Include="Response\TradingApp\InitialAppDataResponse.cs" />
+    <Compile Include="Response\Trading\Position.cs" />
     <Compile Include="Response\User\LoginResponse.cs" />
     <Compile Include="Response\Response.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

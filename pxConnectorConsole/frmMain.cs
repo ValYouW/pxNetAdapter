@@ -68,16 +68,17 @@ namespace pxConnectorConsole
 		    m_userGUID = data.UserInfo.GUID;
 
 		    // Get Quotes
-		    IRequest req = MarketData.SubscribeForQuotes(m_token, m_userGUID);
+		    //IRequest req = MarketData.SubscribeForQuotes(m_token, m_userGUID);
+			IRequest req = TradingApp.GetInitialAppData(m_token, m_userGUID);
 			Send(req, response =>
 				{
 					if (response.Error != null && !string.IsNullOrEmpty(response.Error.Code))
 					{
-						LogConsole("Error subscribing for quotes: " + response.Error.Code + ", " + response.Error.Message);
+						LogConsole("Error: " + response.Error.Code + ", " + response.Error.Message);
 					}
 					else
 					{
-						LogConsole("Subscribed for quotes");
+						LogConsole("Success");
 					}
 				});
 	    }
@@ -148,7 +149,7 @@ namespace pxConnectorConsole
 
         private void btnSend_Click(object sender, EventArgs e)
         {
-			IRequest req = User.Login("udiyqa", "udiudi");
+			IRequest req = User.Login("w123@ufx.com", "123456");
 			Send(req, OnLogin);
         }
 

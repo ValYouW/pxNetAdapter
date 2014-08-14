@@ -5,6 +5,7 @@ namespace pxNetAdapter.Response
 		None,
 		LoginResponse,
 		QuoteSubscribeResponse,
-		QuoteUpdateResponse
+		QuoteUpdateResponse,
+		InitialAppDataResponse
 	}
 }

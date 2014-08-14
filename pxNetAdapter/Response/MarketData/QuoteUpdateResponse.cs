@@ -29,17 +29,4 @@ namespace pxNetAdapter.Response.MarketData
 
 		public IDictionary<string, object> Quotes { get; private set; }
 	}
-
-	public class Quote
-	{
-		public Quote(IDictionary<string, object> data)
-		{
-			if (data == null)
-				return;
-
-			Mid = double.Parse(Utils.GetValue(data, "mid", "0"));
-		}
-
-		public double Mid { get; set; }
-	}
 }

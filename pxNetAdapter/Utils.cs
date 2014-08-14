@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace pxNetAdapter
 {
@@ -10,9 +11,23 @@ namespace pxNetAdapter
 				return defaultValue;
 
 			T res;
+
+			if (typeof(T) == typeof(DateTime))
+			{
+				string exp = GetValue(data, key, "");
+				if (string.IsNullOrEmpty(exp))
+					return defaultValue;
+
+				DateTime tmp;
+				if (DateTime.TryParse(exp, out tmp))
+					return (T)Convert.ChangeType(tmp, typeof(DateTime));
+
+				return defaultValue;
+			}
+
 			try
 			{
-				res = (T)data[key];
+				res = (T)Convert.ChangeType(data[key], typeof(T));
 			}
 			catch
 			{
@@ -20,6 +35,16 @@ namespace pxNetAdapter
 			}
 
 			return res;
+		}
+
+		public static T GetEnumValue<T>(IDictionary<string, object> data, string key, T defaultValue) where T : struct
+		{
+			string val = GetValue(data, key, "");
+			if (string.IsNullOrEmpty(val))
+				return defaultValue;
+
+			T tmp;
+			return Enum.TryParse(val, true, out tmp) ? tmp : defaultValue;
 		}
 	}
 }
