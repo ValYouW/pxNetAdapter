@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pxNetAdapter", "pxNetAdapte
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pxConnectorConsole", "pxConnectorConsole\pxConnectorConsole.csproj", "{C096D4FA-CAE9-4112-B7BC-41342521B14F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NinjaTrader.Hosted", "NinjaTrader.Hosted\NinjaTrader.Hosted.csproj", "{709B4742-A857-4135-8070-D444B3594BAF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{C096D4FA-CAE9-4112-B7BC-41342521B14F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C096D4FA-CAE9-4112-B7BC-41342521B14F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C096D4FA-CAE9-4112-B7BC-41342521B14F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{709B4742-A857-4135-8070-D444B3594BAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{709B4742-A857-4135-8070-D444B3594BAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{709B4742-A857-4135-8070-D444B3594BAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{709B4742-A857-4135-8070-D444B3594BAF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

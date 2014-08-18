@@ -6,6 +6,7 @@ using pxNetAdapter.Response;
 using pxNetAdapter.Request;
 using pxNetAdapter.Response.MarketData;
 using pxNetAdapter.Response.User;
+using System.Reflection;
 
 namespace pxConnectorConsole
 {
@@ -111,13 +112,14 @@ namespace pxConnectorConsole
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
+			//object o = Assembly.LoadFrom("C:\\Program Files\\NinjaTrader 7\\bin\\NinjaTrader.Hosted.dll").CreateInstance("NinjaTrader.Hosted.Loader");
             SetStatus("Connecting...", Color.LightSalmon);
             m_connector.Connect(txtHost.Text, (int)txtPort.Value);
         }
 
-        void m_connector_OnReconnect(object sender, int attempt)
+        void m_connector_OnReconnect(object sender, GenericEventArgs<int> args)
         {
-            SetStatus(string.Format("Connecting ({0})", attempt), Color.LightSalmon);
+            SetStatus(string.Format("Connecting ({0})", args.Args), Color.LightSalmon);
         }
 
         void m_connector_OnDisconnect(object sender, EventArgs e)
@@ -131,8 +133,9 @@ namespace pxConnectorConsole
             LogConsole(m_connector.SessionId);
         }
 
-        void m_connector_OnMessage(object sender, IResponse response)
+        void m_connector_OnMessage(object sender, GenericEventArgs<IResponse> args)
         {
+			IResponse response = args.Args;
 			switch (response.Qualifier)
 			{ 
 				case ResponseTypeEnum.LoginResponse:

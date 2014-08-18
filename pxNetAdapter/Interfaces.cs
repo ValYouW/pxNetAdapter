@@ -7,9 +7,9 @@ namespace pxNetAdapter
     public interface IConnector
     {
         event EventHandler OnConnect;
-        event EventHandler<int> OnReconnect;
+        event EventHandler<GenericEventArgs<int>> OnReconnect;
         event EventHandler OnDisconnect;
-		event EventHandler<IResponse> OnMessage;
+		event EventHandler<GenericEventArgs<IResponse>> OnMessage;
 
 		string SessionId { get; }
 

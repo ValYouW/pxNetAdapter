@@ -10,8 +10,9 @@ namespace pxNetAdapter.Response.TradingApp
 		public InitialAppDataResponseData(IDictionary<string, object> data)
 		{
 			Positions = new List<Position>();
-			Quotes = new List<Quote>();
-			Assets = new List<Asset>();
+			Orders = new List<Position>();
+			Quotes = new Dictionary<string, Quote>();
+			Assets = new Dictionary<string, Asset>();
 
 			if (data == null)
 				return;
@@ -21,9 +22,12 @@ namespace pxNetAdapter.Response.TradingApp
 				IDictionary<string, object> qts = data["quotes"] as IDictionary<string, object>;
 				if (qts != null)
 				{
+					Quote quote;
 					foreach (object q in qts.Values)
 					{
-						Quotes.Add(new Quote(q as IDictionary<string, object>));
+						quote = new Quote(q as IDictionary<string, object>);
+						if (!string.IsNullOrEmpty(quote.Symbol))
+							Quotes[quote.Symbol] = quote;
 					}
 				}
 			}
@@ -33,9 +37,12 @@ namespace pxNetAdapter.Response.TradingApp
 				IDictionary<string, object> asts = data["assets"] as IDictionary<string, object>;
 				if (asts != null)
 				{
+					Asset asset;
 					foreach (object a in asts.Values)
 					{
-						Assets.Add(new Asset(a as IDictionary<string, object>));
+						asset = new Asset(a as IDictionary<string, object>);
+						if (!string.IsNullOrEmpty(asset.Symbol))
+							Assets[asset.Symbol] = asset;
 					}
 				}
 			}
@@ -59,14 +66,15 @@ namespace pxNetAdapter.Response.TradingApp
 				{
 					foreach (object o in ords.Values)
 					{
-						Positions.Add(new Position(o as IDictionary<string, object>));
+						Orders.Add(new Position(o as IDictionary<string, object>));
 					}
 				}
 			}
 		}
 
 		public IList<Position> Positions { get; private set; }
-		public IList<Quote> Quotes { get; private set; }
-		public IList<Asset> Assets { get; private set; }
+		public IList<Position> Orders { get; private set; }
+		public IDictionary<string, Quote> Quotes { get; private set; }
+		public IDictionary<string, Asset> Assets { get; private set; }
 	}
 }

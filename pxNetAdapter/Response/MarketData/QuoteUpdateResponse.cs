@@ -1,3 +1,4 @@
+using pxNetAdapter.Response.Assets;
 using System.Collections.Generic;
 
 namespace pxNetAdapter.Response.MarketData
@@ -6,27 +7,44 @@ namespace pxNetAdapter.Response.MarketData
 	{
 		public QuoteUpdateResponseData(IDictionary<string, object> data)
 		{
-			Quotes = new Dictionary<string, object>();
-			if (data == null || !data.ContainsKey("quotes"))
-				return;
-
-			data = data["quotes"] as IDictionary<string, object>;
+			Quotes = new Dictionary<string, Quote>();
+			Assets = new Dictionary<string, Asset>();
 			if (data == null)
 				return;
 
-			Quote q;
-			IDictionary<string, object> rawQ;
-			foreach (string symbol in data.Keys)
+			if (data.ContainsKey("quotes"))
 			{
-				rawQ = data[symbol] as IDictionary<string, object>;
-				if (rawQ == null)
-					continue;
-				
-				q = new Quote(rawQ);
-				Quotes[symbol] = q;
+				IDictionary<string, object> qts = data["quotes"] as IDictionary<string, object>;
+				if (qts != null)
+				{
+					Quote quote;
+					foreach (object q in qts.Values)
+					{
+						quote = new Quote(q as IDictionary<string, object>);
+						if (!string.IsNullOrEmpty(quote.Symbol))
+							Quotes[quote.Symbol] = quote;
+					}
+				}
 			}
+
+			if (data.ContainsKey("assets"))
+			{
+				IDictionary<string, object> asts = data["assets"] as IDictionary<string, object>;
+				if (asts != null)
+				{
+					Asset asset;
+					foreach (object a in asts.Values)
+					{
+						asset = new Asset(a as IDictionary<string, object>);
+						if (!string.IsNullOrEmpty(asset.Symbol))
+							Assets[asset.Symbol] = asset;
+					}
+				}
+			}
+
 		}
 
-		public IDictionary<string, object> Quotes { get; private set; }
+		public IDictionary<string, Quote> Quotes { get; private set; }
+		public IDictionary<string, Asset> Assets { get; private set; }
 	}
 }

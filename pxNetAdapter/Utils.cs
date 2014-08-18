@@ -3,6 +3,16 @@ using System.Collections.Generic;
 
 namespace pxNetAdapter
 {
+	public class GenericEventArgs<T> : EventArgs
+	{
+		public GenericEventArgs(T args)
+		{
+			Args = args;
+		}
+
+		public T Args { get; private set; }
+	}
+
 	public static class Utils
 	{
 		public static T GetValue<T>(IDictionary<string, object> data, string key, T defaultValue)
@@ -44,7 +54,14 @@ namespace pxNetAdapter
 				return defaultValue;
 
 			T tmp;
-			return Enum.TryParse(val, true, out tmp) ? tmp : defaultValue;
+			try
+			{
+				return (T)Enum.Parse(typeof(T), val, true);
+			}
+			catch
+			{
+				return defaultValue;
+			}
 		}
 	}
 }

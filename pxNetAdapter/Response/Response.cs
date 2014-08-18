@@ -11,8 +11,14 @@ namespace pxNetAdapter.Response
 			if (data == null)
 				return;
 
-			if (!Enum.TryParse(Utils.GetValue(data, "qualifier", ""), true, out m_qualifier))
+			try
+			{
+				m_qualifier = (ResponseTypeEnum)Enum.Parse(typeof(ResponseTypeEnum), Utils.GetValue(data, "qualifier", ""), true);
+			}
+			catch
+			{
 				m_qualifier = ResponseTypeEnum.None;
+			}
 
 			RequestId = Utils.GetValue(data, "requestId", "");
 			Error = null;

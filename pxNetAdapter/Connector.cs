@@ -15,9 +15,9 @@ namespace pxNetAdapter
         #region Members
         
         public event EventHandler OnConnect;
-        public event EventHandler<int> OnReconnect;
+		public event EventHandler<GenericEventArgs<int>> OnReconnect;
         public event EventHandler OnDisconnect;
-		public event EventHandler<IResponse> OnMessage;
+		public event EventHandler<GenericEventArgs<IResponse>> OnMessage;
 
         private TcpClient m_tcpClient;
         private string m_host;
@@ -102,7 +102,8 @@ namespace pxNetAdapter
 
         public void Disconnect()
         {
-            throw new NotImplementedException();
+			if (m_tcpClient.Connected)
+				m_tcpClient.Close();
         }
 
         protected virtual void RaiseOnConneced(EventArgs args)
@@ -116,7 +117,7 @@ namespace pxNetAdapter
         {
             State = ConnectionStateEnum.Connecting;
             if (OnReconnect != null)
-                OnReconnect(this, args);
+                OnReconnect(this, new GenericEventArgs<int>(args));
         }
 
         protected virtual void RaiseOnDisconneced(EventArgs args)
@@ -129,7 +130,7 @@ namespace pxNetAdapter
         protected virtual void RaiseOnMessage(IResponse args)
         {
             if (OnMessage != null)
-                OnMessage(this, args);
+                OnMessage(this, new GenericEventArgs<IResponse>(args));
         }
 
         private void Start()
@@ -240,7 +241,15 @@ namespace pxNetAdapter
                 }
 
                 byte[] data = new byte[1024];
-                int bytesRead = ns.Read(data, 0, 1024);
+
+				int bytesRead = -1;
+				try
+				{
+					bytesRead = ns.Read(data, 0, 1024);
+				}
+				catch
+				{
+				}
 
                 // If no bytes read - disconnected
                 if (bytesRead < 1)
@@ -255,7 +264,7 @@ namespace pxNetAdapter
 
         private void HandleMessage(string msg)
         {
-			IResponse res = m_responseSerializer.Deserialize(msg, typeof(Response.Response)) as IResponse;
+			IResponse res = m_responseSerializer.Deserialize<Response.Response>(msg) as IResponse;
 			if (res == null)
 			{
 				System.Diagnostics.Debug.Print("Got invalid response");
