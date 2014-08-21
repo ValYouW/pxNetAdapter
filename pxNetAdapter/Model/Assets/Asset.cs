@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace pxNetAdapter.Response.Assets
+namespace pxNetAdapter.Model.Assets
 {
 	public class Asset
 	{

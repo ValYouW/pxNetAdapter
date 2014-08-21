@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Web.Script.Serialization;
 using pxNetAdapter.Response;
-using pxNetAdapter.Response.MarketData;
-using pxNetAdapter.Response.TradingApp;
-using pxNetAdapter.Response.User;
+using pxNetAdapter.Response.Data;
 
 namespace pxNetAdapter
 {
@@ -47,6 +45,11 @@ namespace pxNetAdapter
 					break;
 				case ResponseTypeEnum.InitialAppDataResponse:
 					response.Data = new InitialAppDataResponseData(data);
+					break;
+				case ResponseTypeEnum.OpenPositionResponse:
+				case ResponseTypeEnum.ModifyPositionResponse:
+				case ResponseTypeEnum.ClosePositionResponse:
+					response.Data = new PositionResponseData(data);
 					break;
 			}
 

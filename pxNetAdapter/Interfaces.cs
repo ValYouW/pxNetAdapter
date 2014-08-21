@@ -1,5 +1,6 @@
 using pxNetAdapter.Request;
 using pxNetAdapter.Response;
+using pxNetAdapter.Model;
 using System;
 
 namespace pxNetAdapter

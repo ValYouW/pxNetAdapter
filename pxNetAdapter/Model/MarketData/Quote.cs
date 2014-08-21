@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace pxNetAdapter.Response.MarketData
+namespace pxNetAdapter.Model.MarketData
 {
 	public class Quote
 	{

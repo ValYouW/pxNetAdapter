@@ -44,24 +44,36 @@
     <Compile Include="Connector.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Interfaces.cs" />
+    <Compile Include="Model\User\Account.cs" />
+    <Compile Include="Model\User\UserInfo.cs" />
     <Compile Include="ReqResConverter.cs" />
+    <Compile Include="Request\Data\ClosePositionRequestData.cs" />
+    <Compile Include="Request\Data\InitialAppDataRequestData.cs" />
+    <Compile Include="Request\Data\LoginRequestData.cs" />
+    <Compile Include="Request\Data\OpenPositionRequestData.cs" />
+    <Compile Include="Request\Data\QutoesRequestData.cs" />
     <Compile Include="Request\Interfaces.cs" />
     <Compile Include="Request\MarketData.cs" />
+    <Compile Include="Request\Trading.cs" />
     <Compile Include="Request\TradingApp.cs" />
     <Compile Include="Request\User.cs" />
     <Compile Include="Request\Request.cs" />
-    <Compile Include="Response\Assets\Asset.cs" />
+    <Compile Include="Model\Assets\Asset.cs" />
+    <Compile Include="Response\Data\PositionResponseData.cs" />
     <Compile Include="Response\Enums.cs" />
     <Compile Include="Response\Interfaces.cs" />
-    <Compile Include="Response\MarketData\Quote.cs" />
-    <Compile Include="Response\MarketData\QuoteUpdateResponse.cs" />
-    <Compile Include="Response\TradingApp\InitialAppDataResponse.cs" />
-    <Compile Include="Response\Trading\Position.cs" />
-    <Compile Include="Response\User\LoginResponse.cs" />
+    <Compile Include="Model\MarketData\Quote.cs" />
+    <Compile Include="Response\Data\QuoteUpdateResponseData.cs" />
+    <Compile Include="Response\Data\InitialAppDataResponseData.cs" />
+    <Compile Include="Model\Trading\Enums.cs" />
+    <Compile Include="Model\Trading\Order.cs" />
+    <Compile Include="Model\Trading\Position.cs" />
+    <Compile Include="Response\Data\LoginResponseData.cs" />
     <Compile Include="Response\Response.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

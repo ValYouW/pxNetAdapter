@@ -2,11 +2,9 @@
 using System.Drawing;
 using System.Windows.Forms;
 using pxNetAdapter;
-using pxNetAdapter.Response;
 using pxNetAdapter.Request;
-using pxNetAdapter.Response.MarketData;
-using pxNetAdapter.Response.User;
-using System.Reflection;
+using pxNetAdapter.Response;
+using pxNetAdapter.Response.Data;
 
 namespace pxConnectorConsole
 {

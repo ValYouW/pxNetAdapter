@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace pxNetAdapter.Response.Trading
+namespace pxNetAdapter.Model.Trading
 {
 	public class Position
 	{
@@ -46,28 +46,5 @@ namespace pxNetAdapter.Response.Trading
 		public string SellAsset { get; set; }
 		public double ClosePrice { get; set; }
 		public double PNL { get; set; }
-	}
-
-	public enum StatusEnum
-	{
-		None,
-		Open,
-		Closed,
-		Pending,
-		Canceled
-	}
-
-	public enum SideEnum
-	{
-		None,
-		Buy,
-		Sell
-	}
-
-	public enum TypeEnum
-	{
-		None,
-		Market,
-		Limit
 	}
 }

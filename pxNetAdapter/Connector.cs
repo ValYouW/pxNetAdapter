@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using pxNetAdapter.Request;
 using pxNetAdapter.Response;
+using pxNetAdapter.Model;
 using System;
 using System.Net;
 using System.Net.Sockets;

@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using pxNetAdapter.Response.Assets;
-using pxNetAdapter.Response.MarketData;
-using pxNetAdapter.Response.Trading;
+using pxNetAdapter.Model.Assets;
+using pxNetAdapter.Model.MarketData;
+using pxNetAdapter.Model.Trading;
 
-namespace pxNetAdapter.Response.TradingApp
+namespace pxNetAdapter.Response.Data
 {
 	public class InitialAppDataResponseData : IResponseData
 	{

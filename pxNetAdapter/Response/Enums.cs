@@ -6,6 +6,9 @@ namespace pxNetAdapter.Response
 		LoginResponse,
 		QuoteSubscribeResponse,
 		QuoteUpdateResponse,
-		InitialAppDataResponse
+		InitialAppDataResponse,
+		OpenPositionResponse,
+		ModifyPositionResponse,
+		ClosePositionResponse
 	}
 }

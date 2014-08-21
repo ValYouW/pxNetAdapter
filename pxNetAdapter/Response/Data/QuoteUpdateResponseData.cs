@@ -1,7 +1,8 @@
-using pxNetAdapter.Response.Assets;
 using System.Collections.Generic;
+using pxNetAdapter.Model.Assets;
+using pxNetAdapter.Model.MarketData;
 
-namespace pxNetAdapter.Response.MarketData
+namespace pxNetAdapter.Response.Data
 {
 	public class QuoteUpdateResponseData : IResponseData
 	{
